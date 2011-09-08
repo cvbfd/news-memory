@@ -1,0 +1,102 @@
+<script type="text/javascript">
+    <%= "var newspapers = #{@newspapers.inject({}) do |hash, newspaper|
+     hash[newspaper.id] = {:name => newspaper.name, :country => newspaper.country, :uri => newspaper.uri, :wikipedia_uri => newspaper.wikipedia_uri}
+     hash
+   end.to_json};" %>;
+</script>
+
+<div id="adminContent">
+  <div id="adminPageTitle">Configuration</div>
+  <table id="adminMainTable">
+    <tr>
+      <td>
+        <div id="adminLeft">
+          <form action="/admin/add" method="post">
+            <fieldset>
+              <legend>Add a newspaper</legend>
+              <ul>
+                <%= input_text('name', 'Name') %>
+                <%= input_text('uri', 'URI', '', 40, nil, 'uri') %>
+                <%= input_text('wikipedia_uri', 'Wikipedia URI', '', 40, nil, 'wikipedia_uri') %>
+
+                <li>
+                  <label for="country">Country</label>
+                  <select name="country">
+                    <%= input_select_content(NewsMemory::Countries::COUNTRIES_TO_CODE) %>
+                  </select>
+                <li>
+              </ul>
+              <input name="add" type="submit" value="Add"/>
+            </fieldset>
+          </form>
+
+          <% unless @newspapers.empty? %>
+
+            <form action="/admin/edit_newspaper" method="post">
+              <fieldset>
+                <legend>Edit a newspaper</legend>
+                <ul>
+                  <%= display_newspapers_select(@newspapers, 'edit_newspaper_select') %>
+                  <%= input_text('name', 'Name', '', 30, 'edit_newspaper_name') %>
+                  <%= input_text('uri', 'URI', '', 40, 'edit_newspaper_uri') %>
+                  <%= input_text('wikipedia_uri', 'Wikipedia URI', '', 40, 'edit_newspaper_wikipedia_uri') %>
+
+                  <li>
+                    <label for="country">Country</label>
+                    <select name="country" id="edit_newspaper_country">
+                      <%= input_select_content(NewsMemory::Countries::COUNTRIES_TO_CODE) %>
+                    </select>
+                  <li>
+
+                </ul>
+                <input name="update" type="submit" value="Update"/>
+              </fieldset>
+            </form>
+              
+              <form action="/admin/remove" method="post" onsubmit="return confirm('Are you sure you want to delete this newspaper ?');">
+                <fieldset>
+                  <legend>Remove a newspaper</legend>
+                  <ul>
+                    <%= display_newspapers_select(@newspapers) %>
+                  </ul>
+                  <input name="remove" type="submit" value="Remove"/>
+                </fieldset>
+              </form>
+
+          <% end %>
+
+        </div>
+      </td>
+      <td>
+        <div id="adminRight">
+          <form>
+            <fieldset>
+              <legend>Newspapers</legend>
+              <table>
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>URL</th>
+                  <th>Country</th>
+                  <th>Wikipedia URL</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @newspapers.each do |newspaper| %>
+                    <tr>
+                      <td><%= newspaper.name %></td>
+                      <td><%= "<a href=\"#{newspaper.uri}\">#{newspaper.uri}</a>" %></td>
+                      <td><%= NewsMemory::Countries::CODES_TO_COUNTRIES[newspaper.country] %></td>
+                      <td><%= "<a href=\"#{newspaper.wikipedia_uri}\">#{newspaper.wikipedia_uri}</a>" %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </fieldset>
+          </form>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+

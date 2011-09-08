@@ -1,0 +1,37 @@
+body {
+    font-family: georgia, "times new roman",times,serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  border: 0;
+}
+
+#messages {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: black;
+  background-color: #F5F5F5;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#notice {
+  border: 2px solid green;
+  padding: 2px;
+}
+
+#warning {
+  border: 2px solid orange;
+  padding: 2px;
+}
+
+#error {
+  border: 2px solid red;
+  padding: 2px;
+}
