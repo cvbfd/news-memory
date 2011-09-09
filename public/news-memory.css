@@ -31,7 +31,7 @@ header {
 }
 
 navigation form {
-    display: inline;
+    display: inline-block;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -55,6 +55,7 @@ navigation {
 
     margin-left: 2px;
     margin-right: 2px;
+    margin-bottom: 10px;
     border: 1px #DDDDDD solid;
 }
 
