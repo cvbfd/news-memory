@@ -57,3 +57,15 @@ navigation {
     margin-right: 2px;
     border: 1px #DDDDDD solid;
 }
+
+a.dp-choose-date {
+    height: 16px;
+    width: 16px;
+    margin: 5px 3px 0;
+    display: inline-block;
+	overflow: hidden;
+}
+a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}

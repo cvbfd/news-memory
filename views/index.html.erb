@@ -22,7 +22,11 @@
         <input type="submit" value="Go">
       </form>
 
-      Date QQQQQ
+      <form method="get" action="/date" onsubmit="submitDate(); return false;">
+        <label for="nav_date">Date</label>
+        <input id="nav_date" name="date" size="10">
+        <input type="submit" value="Go">
+      </form>
     </navigation>
 
   <% for snapshot in @snapshots %>

@@ -54,6 +54,14 @@ module NewsMemory
       end
     end
 
+    get '/date' do
+      if params[:date]
+        redirect "/date/#{params[:date].gsub("/", "-")}"
+      else
+        redirect '/'
+      end
+    end
+
     get '/country' do
       if params[:country]
         redirect "/country/#{params[:country]}"
@@ -75,7 +83,7 @@ module NewsMemory
       else
         list_common
         @title = newspaper.name
-        @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(100).order(:created_at.desc).all
+        @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(100).order(:created_at.asc).all
         erb :'index.html'
       end
     end
@@ -84,6 +92,14 @@ module NewsMemory
       list_common
       @title = Countries::CODES_TO_COUNTRIES[id]
       @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => Newspaper.filter(:country => id).select(:webpage_id)).limit(100).order(:created_at.desc).all
+      erb :'index.html'
+    end
+
+    get /\/date\/(\d{2})-(\d{2})-(\d{4})/ do |day, month, year|
+      list_common
+      @title = "#{day}/#{month}/#{year}"
+      date_ruby = DateTime.civil(year.to_i, month.to_i, day.to_i)
+      @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter('created_at >= ? and created_at < ?', date_ruby, date_ruby + 1).limit(100).order(:created_at.asc).all
       erb :'index.html'
     end
 
