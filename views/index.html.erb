@@ -1,0 +1,33 @@
+<header>
+  <h1 id="title"><%= @title ? @title : 'News Memory'%></h1>
+  <div id="subtitle"><%= @title ? 'News Memory – ' : ''%>Archives of newspapers' frontpages</div>
+</header>
+
+<div id="content">
+    <navigation>
+
+      <form method="get" action="/newspaper" onsubmit="submitNewspaper(); return false;">
+        <label for="nav_newspaper">Newspapers</label>
+        <%= display_newspapers_select(@newspapers, 'nav_newspaper') %>
+        <input type="submit" value="Go">
+      </form>
+
+      <form method="get" action="/country" onsubmit="submitCountry(); return false;">
+        <label for="nav_country">Countries</label>
+        <select id="nav_country" name="country">
+          <% @countries.each do |co| %>
+              <%= "<option value=\"#{co[0]}\">#{co[1]}</option>" %>
+          <% end %>
+        </select>
+        <input type="submit" value="Go">
+      </form>
+
+      Date QQQQQ
+    </navigation>
+
+  <% for snapshot in @snapshots %>
+      <div class="imgWrapper">
+        <%= "<img src=\"/snapshots/#{snapshot.small_snapshot_path}\" title=\"#{snapshot.webpage.name} #{display_date_time(snapshot.created_at)}\">" %>
+      </div>
+  <% end %>
+</div>

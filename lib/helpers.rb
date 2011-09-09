@@ -39,11 +39,11 @@ module Sinatra
     end
 
     def display_newspapers_select newspapers, id = nil
-      r = "<li><select name=\"newspaper\"#{id ? "id=\"#{id}\"" : ''}>"
+      r = "<select name=\"newspaper\"#{id ? "id=\"#{id}\"" : ''}>"
       newspapers.each do |newspaper|
         r << "<option value=\"#{newspaper.id}\">#{newspaper.name}</option>"
       end
-      r << '</select></li>'
+      r << '</select>'
     end
 
     def display_date_time date, between = ''

@@ -45,7 +45,7 @@ module NewsMemory
 
     post '/admin/remove' do
       if check_logged
-        newspaper = Newspaper[:id => params[:newspaper]]
+        newspaper = Newspaper[params[:newspaper]]
         if newspaper
           newspaper.delete
           flash[:notice] = 'Newspaper removed'
@@ -58,7 +58,7 @@ module NewsMemory
 
     post '/admin/edit_newspaper' do
       if check_logged
-        newspaper = Newspaper[:id => params[:newspaper]]
+        newspaper = Newspaper[params[:newspaper]]
         if newspaper
           begin
             newspaper.update(:name => params[:name],
@@ -79,6 +79,12 @@ module NewsMemory
       end
     end
 
+    post '/admin/snapshots' do
+      if check_logged
+        NewsMemory::ARCHIVIST.fetch_webpages(WebpageArchivist::Webpage.filter(:id => Newspaper.select(:webpage_id)))
+        redirect '/admin'
+      end
+    end
 
   end
 

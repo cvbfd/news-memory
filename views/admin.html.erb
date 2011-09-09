@@ -30,31 +30,36 @@
 
           <% unless @newspapers.empty? %>
 
-            <form action="/admin/edit_newspaper" method="post">
-              <fieldset>
-                <legend>Edit a newspaper</legend>
-                <ul>
-                  <%= display_newspapers_select(@newspapers, 'edit_newspaper_select') %>
-                  <%= input('name', 'Name', '', 30, 'edit_newspaper_name') %>
-                  <%= input('uri', 'URI', '', 40, 'edit_newspaper_uri', 'uri') %>
-                  <%= input('wikipedia_uri', 'Wikipedia URI', '', 40, 'edit_newspaper_wikipedia_uri', 'uri') %>
-                  <li>
-                    <select name="country" id="edit_newspaper_country">
-                      <%= input_select_content(NewsMemory::Countries::COUNTRIES_TO_CODE) %>
-                    </select>
-                  <li>
-                </ul>
-                <input name="update" type="submit" value="Update"/>
-              </fieldset>
-            </form>
-              
+              <form action="/admin/edit_newspaper" method="post">
+                <fieldset>
+                  <legend>Edit a newspaper</legend>
+                  <ul>
+                    <li><%= display_newspapers_select(@newspapers, 'edit_newspaper_select') %></li>
+                    <%= input('name', 'Name', '', 30, 'edit_newspaper_name') %>
+                    <%= input('uri', 'URI', '', 40, 'edit_newspaper_uri', 'uri') %>
+                    <%= input('wikipedia_uri', 'Wikipedia URI', '', 40, 'edit_newspaper_wikipedia_uri', 'uri') %>
+                    <li>
+                      <select name="country" id="edit_newspaper_country">
+                        <%= input_select_content(NewsMemory::Countries::COUNTRIES_TO_CODE) %>
+                      </select>
+                    <li>
+                  </ul>
+                  <input name="update" type="submit" value="Update"/>
+                </fieldset>
+              </form>
+
               <form action="/admin/remove" method="post" onsubmit="return confirm('Are you sure you want to delete this newspaper ?');">
                 <fieldset>
                   <legend>Remove a newspaper</legend>
-                  <ul>
                     <%= display_newspapers_select(@newspapers) %>
-                  </ul>
                   <input name="remove" type="submit" value="Remove"/>
+                </fieldset>
+              </form>
+
+              <form method=post action="/admin/snapshots" onsubmit="return confirm('Are you sure you want to snapshot all the newspapers ?');">
+                <fieldset>
+                  <legend>Snapshots all newspapers</legend>
+                  <input type="submit" value="Snapshots">
                 </fieldset>
               </form>
 
@@ -95,3 +100,16 @@
   </table>
 </div>
 
+<div id="messages">
+  <% if flash[:error] %>
+    <div id="error" class="flash"><%= flash[:error] %></div>
+  <% end %>
+
+  <% if flash[:warning] %>
+    <div id="warning" class="flash"><%= flash[:warning] %></div>
+  <% end %>
+
+  <% if flash[:notice] %>
+    <div id="notice" class="flash"><%= flash[:notice] %></div>
+  <% end %>
+</div>
