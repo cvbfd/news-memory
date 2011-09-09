@@ -72,7 +72,7 @@ module NewsMemory
 
     get '/' do
       list_common
-      @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).limit(100).order(:created_at.desc).all
+      @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => Newspaper.select(:webpage_id)).limit(100).order(:created_at.desc).all
       erb :'index.html'
     end
 
@@ -106,6 +106,10 @@ module NewsMemory
     private
 
     def list_common
+      @min_date = WebpageArchivist::Instance.filter(:snapshot => true).filter(:webpage_id => Newspaper.select(:webpage_id)).select(:created_at).order(:created_at.asc).first
+      if @min_date
+        @min_date = @min_date.created_at.strftime("%d/%m/%Y")
+      end
       @newspapers = Newspaper.order(:name.asc)
       @countries = Newspaper.select(:country).distinct.collect { |n| [n.country, Countries::CODES_TO_COUNTRIES[n.country]] }.sort { |a, b| a[1] <=> b[1] }
     end

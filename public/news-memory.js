@@ -17,7 +17,7 @@ $(document).ready(function() {
    $("a.cover").fancybox();
     $('#nav_date').datePicker(
         {
-            startDate: '01/01/1970',
+            startDate: minDate,
             endDate: (new Date()).asString()
         }
     );
