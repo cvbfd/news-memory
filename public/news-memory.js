@@ -5,3 +5,7 @@ function submitCountry() {
 function submitNewspaper() {
     window.location = "/newspaper/" + $("#nav_newspaper").val();
 }
+
+$(document).ready(function() {
+   $("a.cover").fancybox();
+});

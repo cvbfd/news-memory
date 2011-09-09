@@ -27,7 +27,7 @@
 
   <% for snapshot in @snapshots %>
       <div class="imgWrapper">
-        <%= "<img src=\"/snapshots/#{snapshot.small_snapshot_path}\" title=\"#{snapshot.webpage.name} #{display_date_time(snapshot.created_at)}\">" %>
+        <%= "<a class=\"cover\" title=\"#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}\" href=\"/snapshots/#{snapshot.snapshot_path}\"><img src=\"/snapshots/#{snapshot.small_snapshot_path}\" title=\"#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}\"></a>" %>
       </div>
   <% end %>
 </div>

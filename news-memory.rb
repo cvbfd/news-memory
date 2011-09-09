@@ -64,7 +64,6 @@ module NewsMemory
 
     get '/' do
       list_common
-      @js_include << 'news-memory'
       @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).limit(100).order(:created_at.desc).all
       erb :'index.html'
     end
@@ -75,7 +74,6 @@ module NewsMemory
         redirect '/'
       else
         list_common
-        @js_include << 'news-memory'
         @title = newspaper.name
         @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(100).order(:created_at.desc).all
         erb :'index.html'
@@ -84,7 +82,6 @@ module NewsMemory
 
     get /\/country\/([A-Z]{2})/ do |id|
       list_common
-      @js_include << 'news-memory'
       @title = Countries::CODES_TO_COUNTRIES[id]
       @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => Newspaper.filter(:country => id).select(:webpage_id)).limit(100).order(:created_at.desc).all
       erb :'index.html'
