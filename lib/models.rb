@@ -1,13 +1,17 @@
 module NewsMemory
 
   class Newspaper < Sequel::Model
-    one_to_one :webpage
+    
+    many_to_one :webpage, :class => WebpageArchivist::Webpage
 
     def validate
       super
-      validates_presence [:uri, :name, :wikipedia_uri]
+      validates_presence [:uri, :name, :wikipedia_uri, :country]
       validates_max_length 5000, :uri
+      validates_max_length 5000, :wikipedia_uri
       validates_max_length 250, :name
+      validates_max_length 2, :country
+      validates_min_length 2, :country
       validates_unique :name, :message => "[#{self.name}] is already taken"
       if self.uri
         begin
@@ -24,6 +28,16 @@ module NewsMemory
         end
       end
     end
+
+  end
+
+end
+
+module WebpageArchivist
+
+  class Webpage < Sequel::Model
+
+    one_to_one :newspaper, :class => NewsMemory::Newspaper
 
   end
 

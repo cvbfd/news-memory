@@ -25,19 +25,8 @@ module Sinatra
       Rack::Utils.escape_html(text)
     end
 
-    def input_text(name, label, value = '', size = nil, id = nil, type = 'text')
-      "<li><label for=\"#{name}\">#{label}</label>" +
-          "<input#{id ? " id=\"#{id}\"" : '' } name=\"#{name}\" type=\"#{type}\" value=\"#{value}\"#{size ? " size=\"#{size}\"" : ''}/><li>"
-    end
-
-    def input_file(name, label)
-      "<li><label for=\"#{name}\">#{label}</label>" +
-          "<input name=\"#{name}\" type=\"file\"/><li>"
-    end
-
-    def input_checkbox(name, label, value = false, id = nil)
-      "<li><label for=\"#{name}\">#{label}</label>" +
-          "<input#{id ? " id=\"#{id}\"" : '' } name=\"#{name}\" type=\"checkbox\"#{value ? ' checked="checked"' : ''}\"/></li>"
+    def input(name, placeholder, value = '', size = nil, id = nil, type = 'text', required = true)
+      "<li><input#{id ? " id=\"#{id}\"" : '' } required=\"#{required}\" placeholder=\"#{placeholder}\"  name=\"#{name}\" type=\"#{type}\" value=\"#{value}\"#{size ? " size=\"#{size}\"" : ''}/><li>"
     end
 
     def input_combobox(name, label, possible_values, selected_value = nil)
@@ -49,12 +38,8 @@ module Sinatra
       possible_values.collect { |key, value| "<option value=\"#{value}\"#{(value == selected_value) ? ' selected="selected' : ''}>#{key}</option>" }.join('')
     end
 
-    def input_from_list possible_values
-      possible_values.collect { |value| "<option>#{value}</option>" }.join('')
-    end
-
     def display_newspapers_select newspapers, id = nil
-      r = "<li><label for=\"newspaper\">newspaper</label> <select name=\"newspaper\"#{id ? "id=\"#{id}\"" : ''}>"
+      r = "<li><select name=\"newspaper\"#{id ? "id=\"#{id}\"" : ''}>"
       newspapers.each do |newspaper|
         r << "<option value=\"#{newspaper.id}\">#{newspaper.name}</option>"
       end

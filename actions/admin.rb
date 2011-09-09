@@ -1,3 +1,5 @@
+require 'addressable/uri'
+
 module NewsMemory
 
   class Server
@@ -6,6 +8,7 @@ module NewsMemory
       if check_logged
         @title = 'Configuration'
         @css_include << 'admin'
+        @js_include << 'admin'
         @newspapers = Newspaper.order(:name.asc)
         erb :'admin.html'
       end
@@ -13,19 +16,28 @@ module NewsMemory
 
     post '/admin/add' do
       if check_logged
-        begin
-          URI.parse params[:wikipedia_uri]
-          webpage = NewsMemory::ARCHIVIST.add_webpage(params[:uri], params[:name])
-          Newspaper.create(
-              :name => params[:name],
-              :uri => params[:uri],
-              :wikipedia_uri => params[:wikipedia_uri],
-              :webpage => webpage)
-          flash[:notice] = 'Newspaper added'
-        rescue URI::InvalidURIError => e
-          flash[:error] = "Error during newspaper creation #{e}"
-        rescue Sequel::ValidationFailed => e
-          flash[:error] = "Error during newspaper creation #{e}"
+        if params[:wikipedia_uri].blank?
+          flash[:error] = "No wikipedia uri"
+        elsif params[:uri].blank?
+          flash[:error] = "No uri"
+        else
+          begin
+            w = Addressable::URI.parse(params[:wikipedia_uri]).normalize.to_s
+            URI.parse w
+            u = Addressable::URI.parse(params[:uri]).normalize.to_s
+            webpage = NewsMemory::ARCHIVIST.add_webpage(u, params[:name])
+            Newspaper.create(
+                :name => params[:name],
+                :uri => u,
+                :wikipedia_uri => w,
+                :webpage => webpage,
+                :country => params[:country])
+            flash[:notice] = 'Newspaper added'
+          rescue URI::InvalidURIError => e
+            flash[:error] = "Error during creation #{e}"
+          rescue Sequel::ValidationFailed => e
+            flash[:error] = "Error during creation #{e}"
+          end
         end
         redirect '/admin'
       end
@@ -33,9 +45,9 @@ module NewsMemory
 
     post '/admin/remove' do
       if check_logged
-        newspaper = Newspaper.where(:id => params[:newspaper]).first
+        newspaper = Newspaper[:id => params[:newspaper]]
         if newspaper
-          Feed.Newspaper.where(:id => params[:newspaper]).delete
+          newspaper.delete
           flash[:notice] = 'Newspaper removed'
         else
           flash[:notice] = 'Newspaper not found'
@@ -46,7 +58,7 @@ module NewsMemory
 
     post '/admin/edit_newspaper' do
       if check_logged
-        newspaper = Newspaper.where(:id => params[:newspaper]).first
+        newspaper = Newspaper[:id => params[:newspaper]]
         if newspaper
           begin
             newspaper.update(:name => params[:name],
@@ -58,7 +70,7 @@ module NewsMemory
                 :uri => params[:uri])
             flash[:notice] = 'Newspaper updated'
           rescue Sequel::ValidationFailed => e
-            flash[:error] = "Error during newspaper update #{e}"
+            flash[:error] = "Error during update #{e}"
           end
         else
           flash[:notice] = 'Newspaper not found'

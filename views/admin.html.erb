@@ -2,7 +2,7 @@
     <%= "var newspapers = #{@newspapers.inject({}) do |hash, newspaper|
      hash[newspaper.id] = {:name => newspaper.name, :country => newspaper.country, :uri => newspaper.uri, :wikipedia_uri => newspaper.wikipedia_uri}
      hash
-   end.to_json};" %>;
+   end.to_json};" %>
 </script>
 
 <div id="adminContent">
@@ -15,12 +15,10 @@
             <fieldset>
               <legend>Add a newspaper</legend>
               <ul>
-                <%= input_text('name', 'Name') %>
-                <%= input_text('uri', 'URI', '', 40, nil, 'uri') %>
-                <%= input_text('wikipedia_uri', 'Wikipedia URI', '', 40, nil, 'wikipedia_uri') %>
-
+                <%= input('name', 'Name') %>
+                <%= input('uri', 'URI', '', 40, nil, 'uri') %>
+                <%= input('wikipedia_uri', 'Wikipedia URI', '', 40, nil, 'uri') %>
                 <li>
-                  <label for="country">Country</label>
                   <select name="country">
                     <%= input_select_content(NewsMemory::Countries::COUNTRIES_TO_CODE) %>
                   </select>
@@ -37,17 +35,14 @@
                 <legend>Edit a newspaper</legend>
                 <ul>
                   <%= display_newspapers_select(@newspapers, 'edit_newspaper_select') %>
-                  <%= input_text('name', 'Name', '', 30, 'edit_newspaper_name') %>
-                  <%= input_text('uri', 'URI', '', 40, 'edit_newspaper_uri') %>
-                  <%= input_text('wikipedia_uri', 'Wikipedia URI', '', 40, 'edit_newspaper_wikipedia_uri') %>
-
+                  <%= input('name', 'Name', '', 30, 'edit_newspaper_name') %>
+                  <%= input('uri', 'URI', '', 40, 'edit_newspaper_uri', 'uri') %>
+                  <%= input('wikipedia_uri', 'Wikipedia URI', '', 40, 'edit_newspaper_wikipedia_uri', 'uri') %>
                   <li>
-                    <label for="country">Country</label>
                     <select name="country" id="edit_newspaper_country">
                       <%= input_select_content(NewsMemory::Countries::COUNTRIES_TO_CODE) %>
                     </select>
                   <li>
-
                 </ul>
                 <input name="update" type="submit" value="Update"/>
               </fieldset>
