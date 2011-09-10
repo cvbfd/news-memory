@@ -8,6 +8,7 @@ require 'sinatra'
 require 'rack-flash'
 require 'erb'
 require 'json'
+require 'sinatra/assetpack'
 
 require 'webpage-archivist/migrations'
 require_relative 'lib/migrations'
@@ -25,6 +26,7 @@ module NewsMemory
 
   class Server < Sinatra::Base
 
+    set :root, File.dirname(__FILE__)
     set :views, File.dirname(__FILE__) + '/views'
     set :public, File.dirname(__FILE__) + '/public'
 
@@ -36,6 +38,8 @@ module NewsMemory
     require_relative 'lib/helpers'
     helpers Sinatra::NewsMemoryHelper
 
+    register Sinatra::AssetPack
+
     configure :development do
       WebpageArchivist::DATABASE.loggers << Logger.new(STDOUT)
       set :raise_errors, true
@@ -44,8 +48,44 @@ module NewsMemory
 
     before do
       @user_logged = session[:user]
-      @css_include = []
-      @js_include = []
+      @js = :application
+      @css = :application
+    end
+
+    assets do
+      serve '/js', from: 'assets/js'
+      serve '/css', from: 'assets/css'
+
+      js :application, '/js/news-memory.js',
+         [
+            'js/jquery.js',
+            'js/fancybox/fancybox.js',
+            'js/datepicker/date.js',
+            'js/datepicker/datepicker.js',
+            'js/public.js'
+         ]
+
+      js :admin, '/js/news-memory-admin.js.js',
+         [
+            'js/jquery.js',
+            'js/admin.js'
+         ]
+
+      css :application, '/css/news-memory.css',
+          [
+            '/css/normalize.css',
+            '/css/application.css',
+            '/css/fancybox/jquery.fancybox.css',
+            '/css/datepicker/datepicker.css'
+          ]
+
+      css :admin, '/css/news-memory-admin.css',
+          [
+            '/css/normalize.css',
+            '/css/application.css',
+            '/css/admin.css'
+          ]
+
     end
 
     get '/newspaper' do

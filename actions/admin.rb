@@ -7,8 +7,8 @@ module NewsMemory
     get '/admin' do
       if check_logged
         @title = 'Configuration'
-        @css_include << 'admin'
-        @js_include << 'admin'
+        @js = :admin
+        @css = :admin
         @newspapers = Newspaper.order(:name.asc)
         erb :'admin.html'
       end

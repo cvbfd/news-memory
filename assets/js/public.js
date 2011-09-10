@@ -15,7 +15,9 @@ function submitDate() {
 function formatTitle(title, currentArray, currentIndex, currentOpts) {
     return "<div class='zoom'>" +  $(currentArray[currentIndex]).attr('formattedtitle') + "</div>";
 }
+
 Date.format = 'mm/dd/yyyy';
+
 $(document).ready(function() {
     $("a.cover").fancybox(
         {
