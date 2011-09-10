@@ -1,39 +1,57 @@
-<script type="text/javascript"><%= "var minDate = '#{@min_date ? @min_date : '01/01/1970'}';"%></script>
+<% if @title %>
+    <header>
+      <h1 id="title"><%= @title %></h1>
+      <% if @subtitle %>
+          <div id="subtitle"><%= @subtitle %></div>
+      <% end %>
+    </header>
+    <div id="header2">
+      <h2 id="title2"><a href="/" title="Go to homepage">News Memory</a></h2>
 
-<header>
-  <h1 id="title"><%= @title ? @title : 'News Memory'%></h1>
-  <div id="subtitle"><%= @title ? '<a href="/">News Memory</a> – ' : ''%>Archives of newspapers' frontpages</div>
-</header>
+      <div id="subtitle2">Archives of newspapers' frontpages</div>
+    </div>
+<% else %>
+    <header>
+      <h1 id="title"><%= 'News Memory' %></h1>
+
+      <div id="subtitle">Archives of newspapers' frontpages</div>
+    </header>
+<% end %>
 
 <div id="content">
-    <navigation>
+  <navigation>
 
-      <form method="get" action="/newspaper" onsubmit="submitNewspaper(); return false;">
-        <label for="nav_newspaper">Newspapers</label>
-        <%= display_newspapers_select(@newspapers, 'nav_newspaper') %>
-        <input type="submit" value="Go">
-      </form>
+    <form method="get" action="/newspaper" onsubmit="submitNewspaper(); return false;">
+      <label for="nav_newspaper">Newspapers</label>
+      <%= display_newspapers_select(@newspapers, 'nav_newspaper') %>
+      <input type="submit" value="Go">
+    </form>
 
-      <form method="get" action="/country" onsubmit="submitCountry(); return false;">
-        <label for="nav_country">Countries</label>
-        <select id="nav_country" name="country">
-          <% @countries.each do |co| %>
-              <%= "<option value=\"#{co[0]}\">#{co[1]}</option>" %>
-          <% end %>
-        </select>
-        <input type="submit" value="Go">
-      </form>
+    <form method="get" action="/country" onsubmit="submitCountry(); return false;">
+      <label for="nav_country">Countries</label>
+      <select id="nav_country" name="country">
+        <% @countries.each do |co| %>
+            <%= "<option value=\"#{co[0]}\">#{co[1]}</option>" %>
+        <% end %>
+      </select>
+      <input type="submit" value="Go">
+    </form>
 
-      <form method="get" action="/date" onsubmit="submitDate(); return false;">
-        <label for="nav_date">Date</label>
-        <input id="nav_date" name="date" size="10">
-        <input type="submit" value="Go">
-      </form>
-    </navigation>
+    <form method="get" action="/date" onsubmit="submitDate(); return false;">
+      <label for="nav_date">Date</label>
+      <input id="nav_date" name="date" size="10">
+      <input type="submit" value="Go">
+    </form>
+  </navigation>
 
   <% for snapshot in @snapshots %>
       <div class="imgWrapper">
-        <%= "<a class=\"cover\" title=\"#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}\" href=\"/snapshots/#{snapshot.snapshot_path}\"><img src=\"/snapshots/#{snapshot.small_snapshot_path}\" title=\"#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}\"></a>" %>
+        <a class="cover"
+           title="<%= "#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}" %>"
+           formattedTitle="<%= "<a href='/newspaper/#{snapshot.webpage.newspaper.id}'>#{snapshot.webpage.name}</a> – <a href='/date/#{snapshot.created_at.strftime("%d-%m-%Y")}'>#{display_date_time(snapshot.created_at)}</a>" %>"
+           href="<%= "/snapshots/#{snapshot.snapshot_path}" %>">
+          <img src="<%= "/snapshots/#{snapshot.small_snapshot_path}" %>" title="<%= "#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}" %>">
+        </a>
       </div>
   <% end %>
 </div>

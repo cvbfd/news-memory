@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'bundler'
 Bundler.setup
 
@@ -83,7 +85,8 @@ module NewsMemory
       else
         list_common
         @title = newspaper.name
-        @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(100).order(:created_at.asc).all
+        @subtitle = "<a href=\"#{newspaper.uri}\">Website</a> – <a href=\"#{newspaper.wikipedia_uri}\">Wikipedia page</a>"
+        @snapshots = WebpageArchivist::Instance.eager(:webpage).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(100).order(:created_at.desc).all
         erb :'index.html'
       end
     end
