@@ -73,7 +73,6 @@ module NewsMemory
 
       css :application, '/css/news-memory.css',
           [
-            '/css/normalize.css',
             '/css/application.css',
             '/css/fancybox/jquery.fancybox.css',
             '/css/datepicker/datepicker.css'
@@ -81,7 +80,6 @@ module NewsMemory
 
       css :admin, '/css/news-memory-admin.css',
           [
-            '/css/normalize.css',
             '/css/application.css',
             '/css/admin.css'
           ]
