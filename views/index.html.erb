@@ -1,4 +1,7 @@
-<script type="text/javascript"><%= "var minDate = '#{@min_date ? @min_date : '01/01/1970'}';" %></script>
+<script type="text/javascript">
+  <%= "var minDate = '#{@min_date ? @min_date : '01/01/1970'}';" %>
+  <%= "var morePath = '#{@more_path}';" %>
+</script>
 
 <% if @title %>
     <header>
@@ -54,6 +57,12 @@
            href="<%= "/snapshots/#{snapshot.snapshot_path}" %>">
           <img src="<%= "/snapshots/#{snapshot.small_snapshot_path}" %>" title="<%= "#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}" %>">
         </a>
+      </div>
+  <% end %>
+  <% unless (@snapshots.length < NewsMemory::PAGE_SIZE) %>
+      <div id="moreWrapper" class="imgWrapper">
+        <img src="blank.gif">
+        <a id="more" href="#">Next frontpages</a>
       </div>
   <% end %>
 </div>
