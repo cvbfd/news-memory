@@ -1,5 +1,5 @@
 body, .zoom {
-    font-family: georgia, "times new roman", times, serif;
+    font-family: "times new roman", georgia, times, serif;
     font-size: 16px;
 }
 
@@ -30,7 +30,7 @@ header {
 #header2 {
     position: absolute;
     top: 10px;
-    left: 5%;
+    left: 3%;
     text-align: center;
 }
 #title2 {
@@ -59,7 +59,7 @@ navigation {
 }
 
 #content {
-    width: 90%;
+    width: 94%;
     margin-left: auto;
     margin-right: auto;
     text-align: center;

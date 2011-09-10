@@ -20,7 +20,11 @@ $(document).ready(function() {
     $("a.cover").fancybox(
         {
             titlePosition: 'inside',
-            titleFormat: formatTitle
+            titleFormat: formatTitle,
+            width: 1024,
+            height: 720,
+            autoScale: false,
+            hideOnContentClick: true
         }
     );
     $('#nav_date').datePicker(
