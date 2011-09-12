@@ -120,3 +120,16 @@ a.dp-choose-date.dp-disabled {
 	background-position: 0 -20px;
 	cursor: default;
 }
+
+#about {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: justify;
+}
+#about a {
+    font-weight: bold;
+}
+#about p {
+    padding-bottom: 5px;
+}

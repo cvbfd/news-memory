@@ -88,6 +88,11 @@ module NewsMemory
 
     end
 
+    get '/about' do
+      @title = 'About'
+      erb :'about.html'
+    end
+
     get '/newspaper' do
       if params[:newspaper]
         redirect "/newspaper/#{params[:newspaper]}"
