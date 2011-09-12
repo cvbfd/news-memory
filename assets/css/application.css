@@ -65,30 +65,36 @@ navigation {
     text-align: center;
 }
 
-.imgWrapper {
-    width: 256px;
-    height: 180px;
-
+a.cover {
     display: inline-block;
+    width: 256px;
+    height: 180px;
 
+    margin-bottom: 5px;
     margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 10px;
-    border: 1px #DDDDDD solid;
-    position: relative;
+    margin-top: 2px;
+    padding: 5px;
+    border: 1px #CCCCCC solid;
 }
 
-.imgWrapper img {
+.cover img{
     width: 256px;
     height: 180px;
 }
 
-#moreWrapper a {
-    display: block;
-    position: absolute;
-    width: 256px;
+#more {
+    bottom: 0;
+    width: 94%;
+    margin-left: 3%;
+    margin-right: 3%;
     text-align: center;
-    top: 50px;
+    background: #CCCCCC;
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin-top: 20px;
 }
 
 .zoom {

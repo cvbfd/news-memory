@@ -50,19 +50,18 @@
   </navigation>
 
   <% for snapshot in @snapshots %>
-      <div class="imgWrapper">
         <a class="cover"
            title="<%= "#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}" %>"
            formattedTitle="<%= "<a href='/newspaper/#{snapshot.webpage.newspaper.id}'>#{snapshot.webpage.name}</a> – <a href='/date/#{snapshot.created_at.strftime("%d-%m-%Y")}'>#{display_date_time(snapshot.created_at)}</a>" %>"
            href="<%= "/snapshots/#{snapshot.snapshot_path}" %>">
           <img src="<%= "/snapshots/#{snapshot.small_snapshot_path}" %>" title="<%= "#{snapshot.webpage.name} – #{display_date_time(snapshot.created_at)}" %>">
         </a>
-      </div>
   <% end %>
-  <% unless (@snapshots.length < NewsMemory::PAGE_SIZE) %>
-      <div id="moreWrapper" class="imgWrapper">
-        <img src="blank.gif">
-        <a id="more" href="#">Next frontpages</a>
-      </div>
-  <% end %>
+
 </div>
+
+<% unless (@snapshots.length < NewsMemory::PAGE_SIZE) %>
+    <div id="more">
+      <a href="#">Next Frontpages</a>
+    </div>
+<% end %>

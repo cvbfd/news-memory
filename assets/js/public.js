@@ -37,29 +37,27 @@ $(document).ready(function() {
             endDate: (new Date()).asString()
         }
     );
-    $("#more").click(function() {
+    $("#more a").click(function() {
         $.getJSON(morePath + currentPage, function(data) {
-            var moreWrapper = $("#moreWrapper");
+            var content = $("#content");
             $.each(data, function(index, s) {
                 var date = new Date(s.date * 1000);
                 var stringDate = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear();
                 var stringTime = date.getHours() + ":" + date.getMinutes() + "/" + date.getSeconds();
                 var stringDateLink = date.getDay() + "-" + date.getMonth() + "-" + date.getFullYear();
                 $(
-                    '<div class="imgWrapper moreItem">' +
                         '<a class="cover"' + 'title="' + s.name + " – " + stringDate + " " + stringTime + '"' +
                         'formattedTitle="<a href=\'/newspaper/' + s.newspaper + '\'>' + s.name + '</a> – <a href=\'/date/' + stringDateLink + '\'>' + stringDate + ' ' + stringTime + '</a>"' +
                         'href="' + s.snapshot + '">' +
                         '<img src="' + s.small_snapshot + '" title="' + s.name + ' – ' + stringDate + ' ' + stringTime + '">' +
-                        '</a>' +
-                        '</div>'
-                ).insertBefore(moreWrapper).find('.cover').fancybox(fancyBoxParams);
+                        '</a>'
+                ).appendTo(content).fancybox(fancyBoxParams);
             });
 
             currentPage++;
 
             if (data.length < 100) {
-                $("#moreWrapper").hide();
+                $("#more").hide();
             }
         });
       return false;
