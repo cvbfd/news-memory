@@ -9,6 +9,7 @@ require 'rack-flash'
 require 'erb'
 require 'json'
 require 'sinatra/assetpack'
+require 'sinatra/cache'
 
 require 'webpage-archivist/migrations'
 require_relative 'lib/migrations'
@@ -16,6 +17,8 @@ require 'webpage-archivist'
 require_relative 'lib/models'
 
 require_relative 'lib/countries'
+
+require 'find'
 
 WebpageArchivist::Snapshoter.height= 720
 WebpageArchivist::Snapshoter.thumbnail_crop_height= 720
@@ -48,6 +51,9 @@ module NewsMemory
       set :show_exceptions, :true
     end
 
+    register Sinatra::Cache
+    set :cache_enabled, true
+
     before do
       @user_logged = session[:user]
       @js = :application
@@ -60,30 +66,30 @@ module NewsMemory
 
       js :application, '/js/news-memory.js',
          [
-            '/js/jquery.js',
-            '/js/fancybox/fancybox.js',
-            '/js/datepicker/date.js',
-            '/js/datepicker/datePicker.js',
-            '/js/public.js'
+             '/js/jquery.js',
+             '/js/fancybox/fancybox.js',
+             '/js/datepicker/date.js',
+             '/js/datepicker/datePicker.js',
+             '/js/public.js'
          ]
 
       js :admin, '/js/news-memory-admin.js.js',
          [
-            '/js/jquery.js',
-            '/js/admin.js'
+             '/js/jquery.js',
+             '/js/admin.js'
          ]
 
       css :application, '/css/news-memory.css',
           [
-            '/css/application.css',
-            '/css/fancybox/jquery.fancybox.css',
-            '/css/datepicker/datepicker.css'
+              '/css/application.css',
+              '/css/fancybox/jquery.fancybox.css',
+              '/css/datepicker/datepicker.css'
           ]
 
       css :admin, '/css/news-memory-admin.css',
           [
-            '/css/application.css',
-            '/css/admin.css'
+              '/css/application.css',
+              '/css/admin.css'
           ]
 
     end
@@ -129,11 +135,14 @@ module NewsMemory
     end
 
     get /\/json\/newspaper\/(\d+)\/(\d+)/ do |id, page|
-      newspaper = Newspaper[id]
-      unless newspaper
-        halt 404
-      else
-        json newspaper_list(newspaper, page.to_i)
+      content_type :json
+      cache_fragment '' do
+        newspaper = Newspaper[id]
+        unless newspaper
+          halt 404
+        else
+          json newspaper_list(newspaper, page.to_i)
+        end
       end
     end
 
@@ -151,8 +160,11 @@ module NewsMemory
       end
     end
 
-    get /\/json\/country\/(\d+)\/(\d+)/ do |id, page|
-      json country_list(id, page.to_i)
+    get /\/json\/country\/([A-Z]{2})\/(\d+)/ do |id, page|
+      content_type :json
+      cache_fragment '' do
+        json country_list(id, page.to_i)
+      end
     end
 
     get /\/country\/([A-Z]{2})/ do |id|
@@ -164,8 +176,11 @@ module NewsMemory
     end
 
     get /\/json\/date\/(\d{2})-(\d{2})-(\d{4})\/(\d+)/ do |day, month, year, page|
-      date_ruby = DateTime.civil(year.to_i, month.to_i, day.to_i)
-      json date_list(date_ruby, page.to_i)
+      content_type :json
+      cache_fragment '' do
+        date_ruby = DateTime.civil(year.to_i, month.to_i, day.to_i)
+        json date_list(date_ruby, page.to_i)
+      end
     end
 
     get /\/date\/(\d{2})-(\d{2})-(\d{4})/ do |day, month, year|
@@ -197,7 +212,7 @@ module NewsMemory
     end
 
     def country_list id, page
-      WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => Newspaper.filter(:country => id).select(:webpage_id)).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).al
+      WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => Newspaper.filter(:country => id).select(:webpage_id)).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
     end
 
     def date_list date, page
@@ -205,7 +220,6 @@ module NewsMemory
     end
 
     def json data
-      content_type :json
       data.collect do |i|
         {
             :id => i.id,
@@ -216,6 +230,24 @@ module NewsMemory
             :small_snapshot => "/snapshots/#{i.small_snapshot_path}"
         }
       end.to_json
+    end
+
+    def wipe_cache
+
+      index = File.join(settings.cache_output_dir, 'index.html')
+      if File.exist? index
+        File.unlink index
+      end
+
+      [settings.cache_fragments_output_dir] + ['date', 'country', 'newspaper'].collect { |d| File.join(settings.cache_output_dir, d) }.each do |d|
+        if File.exist?(d)
+          Find.find(d) do |f|
+            unless File.directory?(f)
+              File.unlink f
+            end
+          end
+        end
+      end
     end
 
   end

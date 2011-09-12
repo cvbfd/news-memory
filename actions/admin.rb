@@ -10,7 +10,7 @@ module NewsMemory
         @js = :admin
         @css = :admin
         @newspapers = Newspaper.order(:name.asc)
-        erb :'admin.html'
+        erb :'admin.html', :cache => false
       end
     end
 
@@ -33,6 +33,7 @@ module NewsMemory
                 :webpage => webpage,
                 :country => params[:country])
             flash[:notice] = 'Newspaper added'
+            wipe_cache
           rescue URI::InvalidURIError => e
             flash[:error] = "Error during creation #{e}"
           rescue Sequel::ValidationFailed => e
@@ -43,17 +44,26 @@ module NewsMemory
       end
     end
 
+    get '/admin/add' do
+      redirect '/admin'
+    end
+
     post '/admin/remove' do
       if check_logged
         newspaper = Newspaper[params[:newspaper]]
         if newspaper
           newspaper.delete
           flash[:notice] = 'Newspaper removed'
+          wipe_cache
         else
           flash[:notice] = 'Newspaper not found'
         end
         redirect '/admin'
       end
+    end
+
+    get '/admin/remove' do
+      redirect '/admin'
     end
 
     post '/admin/edit_newspaper' do
@@ -69,6 +79,7 @@ module NewsMemory
                 :name => params[:name],
                 :uri => params[:uri])
             flash[:notice] = 'Newspaper updated'
+            wipe_cache
           rescue Sequel::ValidationFailed => e
             flash[:error] = "Error during update #{e}"
           end
@@ -79,11 +90,20 @@ module NewsMemory
       end
     end
 
+    get '/admin/edit_newspaper' do
+      redirect '/admin'
+    end
+
     post '/admin/snapshots' do
       if check_logged
         NewsMemory::ARCHIVIST.fetch_webpages(WebpageArchivist::Webpage.filter(:id => Newspaper.select(:webpage_id)))
+        wipe_cache
         redirect '/admin'
       end
+    end
+
+    get '/admin/snapshots' do
+      redirect '/admin'
     end
 
   end
