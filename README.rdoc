@@ -1,0 +1,7 @@
+This is the source of the news-memory[http://news-memory.net/] website.
+
+This site archive and snapshots the frontpage of majors online newspapers daily.
+
+It is written in ruby and use the webpage-archivist[https://github.com/archiloque/webpage-archivist] library for the archiving features.
+
+Released under the MIT license
