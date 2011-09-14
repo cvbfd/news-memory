@@ -121,15 +121,15 @@ a.dp-choose-date.dp-disabled {
 	cursor: default;
 }
 
-#about {
+#pageContent {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
     text-align: justify;
 }
-#about a {
+#pageContent a {
     font-weight: bold;
 }
-#about p {
+#pageContent p {
     padding-bottom: 5px;
 }

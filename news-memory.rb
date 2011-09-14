@@ -94,6 +94,10 @@ module NewsMemory
 
     end
 
+    not_found do
+      erb :'404.html'
+    end
+
     get '/about' do
       @title = 'About'
       erb :'about.html'
