@@ -30,6 +30,9 @@ var fancyBoxParams = {
 };
 
 $(document).ready(function() {
+    $('header').bigtext({
+        childSelector: '> h1'
+    });
     $("a.cover").fancybox(fancyBoxParams);
     $('#nav_date').datePicker(
         {
@@ -46,7 +49,7 @@ $(document).ready(function() {
                 var stringTime = date.getHours() + ":" + date.getMinutes() + "/" + date.getSeconds();
                 var stringDateLink = date.getDay() + "-" + date.getMonth() + "-" + date.getFullYear();
                 $(
-                        '<a class="cover"' + 'title="' + s.name + " – " + stringDate + " " + stringTime + '"' +
+                    '<a class="cover"' + 'title="' + s.name + " – " + stringDate + " " + stringTime + '"' +
                         'formattedTitle="<a href=\'/newspaper/' + s.newspaper + '\'>' + s.name + '</a> – <a href=\'/date/' + stringDateLink + '\'>' + stringDate + ' ' + stringTime + '</a>"' +
                         'href="' + s.snapshot + '">' +
                         '<img src="' + s.small_snapshot + '" title="' + s.name + ' – ' + stringDate + ' ' + stringTime + '">' +
@@ -60,6 +63,6 @@ $(document).ready(function() {
                 $("#more").hide();
             }
         });
-      return false;
+        return false;
     });
 });
