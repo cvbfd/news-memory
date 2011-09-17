@@ -141,62 +141,64 @@ module NewsMemory
       erb :'index.html'
     end
 
-    private
+    helpers do
 
-    def list_common
-      @min_date = WebpageArchivist::Instance.filter(:snapshot => true).filter(:webpage_id => Newspaper.select(:webpage_id)).select(:created_at).order(:created_at.asc).first
-      if @min_date
-        @min_date = @min_date.created_at.strftime("%d/%m/%Y")
-      end
-      @newspapers = Newspaper.order(:name.asc)
-      @countries = Newspaper.select(:country).distinct.collect { |n| [n.country, Countries::CODES_TO_COUNTRIES[n.country]] }.sort { |a, b| a[1] <=> b[1] }
-    end
-
-    def index_list page
-      WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => Newspaper.select(:webpage_id)).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
-    end
-
-    def newspaper_list newspaper, page
-      WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
-    end
-
-    def country_list id, page
-      WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => Newspaper.filter(:country => id).select(:webpage_id)).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
-    end
-
-    def date_list date, page
-      WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter('created_at >= ? and created_at < ?', date, date + 1).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.asc).all
-    end
-
-    def json data
-      data.collect do |i|
-        {
-            :id => i.id,
-            :name => i.webpage.name,
-            :date => i.created_at.to_time.to_i,
-            :newspaper => i.webpage.newspaper.id,
-            :snapshot => "/snapshots/#{i.snapshot_path}",
-            :small_snapshot => "/snapshots/#{i.small_snapshot_path}"
-        }
-      end.to_json
-    end
-
-    def wipe_cache
-
-      index = File.join(settings.cache_output_dir, 'index.html')
-      if File.exist? index
-        File.unlink index
+      def list_common
+        @min_date = WebpageArchivist::Instance.filter(:snapshot => true).filter(:webpage_id => Newspaper.select(:webpage_id)).select(:created_at).order(:created_at.asc).first
+        if @min_date
+          @min_date = @min_date.created_at.strftime("%d/%m/%Y")
+        end
+        @newspapers = Newspaper.order(:name.asc)
+        @countries = Newspaper.select(:country).distinct.collect { |n| [n.country, Countries::CODES_TO_COUNTRIES[n.country]] }.sort { |a, b| a[1] <=> b[1] }
       end
 
-      [settings.cache_fragments_output_dir] + ['date', 'country', 'newspaper'].collect { |d| File.join(settings.cache_output_dir, d) }.each do |d|
-        if File.exist?(d)
-          Find.find(d) do |f|
-            unless File.directory?(f)
-              File.unlink f
+      def index_list page
+        WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => Newspaper.select(:webpage_id)).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
+      end
+
+      def newspaper_list newspaper, page
+        WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => newspaper.webpage_id).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
+      end
+
+      def country_list id, page
+        WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter(:webpage_id => Newspaper.filter(:country => id).select(:webpage_id)).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.desc).all
+      end
+
+      def date_list date, page
+        WebpageArchivist::Instance.eager(:webpage => :newspaper).filter(:snapshot => true).filter('created_at >= ? and created_at < ?', date, date + 1).limit(PAGE_SIZE, page * PAGE_SIZE).order(:created_at.asc).all
+      end
+
+      def json data
+        data.collect do |i|
+          {
+              :id => i.id,
+              :name => i.webpage.name,
+              :date => i.created_at.to_time.to_i,
+              :newspaper => i.webpage.newspaper.id,
+              :snapshot => "/snapshots/#{i.snapshot_path}",
+              :small_snapshot => "/snapshots/#{i.small_snapshot_path}"
+          }
+        end.to_json
+      end
+
+      def wipe_cache
+
+        index = File.join(settings.cache_output_dir, 'index.html')
+        if File.exist? index
+          File.unlink index
+        end
+
+        [settings.cache_fragments_output_dir] + ['date', 'country', 'newspaper'].collect { |d| File.join(settings.cache_output_dir, d) }.each do |d|
+          if File.exist?(d)
+            Find.find(d) do |f|
+              unless File.directory?(f)
+                File.unlink f
+              end
             end
           end
         end
       end
+
     end
 
   end

@@ -7,7 +7,7 @@ module NewsMemory
   class Server
 
     get '/admin' do
-      if check_logged
+      if logged!
         @title = 'Configuration'
         @js = :admin
         @css = :admin
@@ -17,7 +17,7 @@ module NewsMemory
     end
 
     post '/admin/add' do
-      if check_logged
+      if logged!
         if params[:wikipedia_uri].blank?
           flash[:error] = "No wikipedia uri"
         elsif params[:uri].blank?
@@ -46,12 +46,8 @@ module NewsMemory
       end
     end
 
-    get '/admin/add' do
-      redirect '/admin'
-    end
-
     post '/admin/remove' do
-      if check_logged
+      if logged!
         newspaper = Newspaper[params[:newspaper]]
         if newspaper
           newspaper.delete
@@ -64,12 +60,8 @@ module NewsMemory
       end
     end
 
-    get '/admin/remove' do
-      redirect '/admin'
-    end
-
     post '/admin/edit_newspaper' do
-      if check_logged
+      if logged!
         newspaper = Newspaper[params[:newspaper]]
         if newspaper
           begin
@@ -92,22 +84,28 @@ module NewsMemory
       end
     end
 
-    get '/admin/edit_newspaper' do
-      redirect '/admin'
-    end
-
     post '/admin/snapshots' do
-      if check_logged
-        NewsMemory::ARCHIVIST.fetch_webpages(WebpageArchivist::Webpage.filter(:id => Newspaper.select(:webpage_id)))
-        wipe_cache
+      if logged!
+        snapshots
         redirect '/admin'
       end
     end
 
-    get '/admin/snapshots' do
-      redirect '/admin'
+    ['/admin/add', '/admin/remove', '/admin/remove', '/admin/edit_newspaper', '/admin/snapshots'].each do |r|
+      get r do
+        redirect '/admin'
+      end
     end
 
+    helpers do
+
+      def snapshots
+        NewsMemory::ARCHIVIST.fetch_webpages(WebpageArchivist::Webpage.filter(:id => Newspaper.select(:webpage_id)))
+        wipe_cache
+      end
+      
+    end
+    
   end
 
 end

@@ -67,3 +67,4 @@ end
 require_relative 'actions/admin'
 require_relative 'actions/login'
 require_relative 'actions/public'
+require_relative 'actions/backend'

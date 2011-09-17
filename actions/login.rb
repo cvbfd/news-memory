@@ -31,33 +31,27 @@ module NewsMemory
       redirect '/'
     end
 
-    private
+    helpers do
 
-    def check_logged
-      if (!ENV['OPENID_URI']) || @user_logged
-        true
-      elsif resp = request.env['rack.openid.response']
-        if resp.status == :success
-          session[:user] = resp
+      def logged!
+        if (!ENV['OPENID_URI']) || @user_logged
           true
+        elsif resp = request.env['rack.openid.response']
+          if resp.status == :success
+            session[:user] = resp
+            true
+          else
+            halt 404, "Error: #{resp.status}"
+            false
+          end
         else
-          halt 404, "Error: #{resp.status}"
+          redirect "/login?return_to=#{CGI::escape(request.url)}"
           false
         end
-      else
-        redirect "/login?return_to=#{CGI::escape(request.url)}"
-        false
       end
+
     end
 
-    def check_logged_ajax
-      if (!ENV['OPENID_URI']) || @user_logged
-        true
-      else
-        body 'Logged users only'
-        false
-      end
-    end
   end
 
 end
