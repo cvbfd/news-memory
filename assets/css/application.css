@@ -108,21 +108,15 @@ a.cover {
 a.dp-choose-date {
     margin: 0;
     padding: 0;
-    height: 20px;
-    width: 16px;
     margin-right: 3px;
     margin-left: 3px;
     display: inline-block;
-	overflow: hidden;
 }
 
 a.dp-choose-date img {
-    padding-top: 5px;
-}
-
-a.dp-choose-date.dp-disabled {
-	background-position: 0 -20px;
-	cursor: default;
+    width: 16px;
+    height: 17px;
+    vertical-align: bottom;
 }
 
 #pageContent {
