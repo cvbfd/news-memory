@@ -75,17 +75,20 @@ module NewsMemory
     get '/' do
       list_common
       @snapshots = index_list(0)
-      @more_path = "/json/"
+      @more_path = "/json/index"
       erb :'index.html'
     end
 
-    get /\/json\/(\d+)/ do |id|
-      json index_list(id.to_i)
+    get /\/json\/index\/(\d+)\.json/ do |id|
+      content_type :json
+      cache_raw do
+        json index_list(id.to_i)
+      end
     end
 
-    get /\/json\/newspaper\/(\d+)\/(\d+)/ do |id, page|
+    get /\/json\/newspaper\/(\d+)\/(\d+)\.json/ do |id, page|
       content_type :json
-      cache_fragment '' do
+      cache_raw do
         newspaper = Newspaper[id]
         unless newspaper
           halt 404
@@ -109,9 +112,9 @@ module NewsMemory
       end
     end
 
-    get /\/json\/country\/([A-Z]{2})\/(\d+)/ do |id, page|
+    get /\/json\/country\/([A-Z]{2})\/(\d+)\.json/ do |id, page|
       content_type :json
-      cache_fragment '' do
+      cache_raw do
         json country_list(id, page.to_i)
       end
     end
@@ -124,15 +127,15 @@ module NewsMemory
       erb :'index.html'
     end
 
-    get /\/json\/date\/(\d{2})-(\d{2})-(\d{4})\/(\d+)/ do |day, month, year, page|
+    get /\/json\/date\/(\d{2})-(\d{2})-(\d{4})\/(\d+)\.json/ do |day, month, year, page|
       content_type :json
-      cache_fragment '' do
+      cache_raw do
         date_ruby = DateTime.civil(year.to_i, month.to_i, day.to_i)
         json date_list(date_ruby, page.to_i)
       end
     end
 
-    get /\/date\/(\d{2})-(\d{2})-(\d{4})/ do |day, month, year|
+    get /\/date\/(\d{2})-(\d{2})-(\d{4})\.json/ do |day, month, year|
       list_common
       @title = "#{day}/#{month}/#{year}"
       date_ruby = DateTime.civil(year.to_i, month.to_i, day.to_i)
@@ -188,7 +191,7 @@ module NewsMemory
           File.unlink index
         end
 
-        [settings.cache_fragments_output_dir] + ['date', 'country', 'newspaper'].collect { |d| File.join(settings.cache_output_dir, d) }.each do |d|
+        ['date', 'country', 'newspaper', 'json'].collect { |d| File.join(settings.cache_output_dir, d) }.each do |d|
           if File.exist?(d)
             Find.find(d) do |f|
               unless File.directory?(f)

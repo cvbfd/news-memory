@@ -41,7 +41,7 @@ $(document).ready(function() {
         }
     );
     $("#more a").click(function() {
-        $.getJSON(morePath + currentPage, function(data) {
+        $.getJSON(morePath + currentPage + ".json", function(data) {
             var content = $("#content");
             $.each(data, function(index, s) {
                 var date = new Date(s.date * 1000);
