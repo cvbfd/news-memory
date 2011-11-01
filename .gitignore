@@ -1,9 +1,9 @@
 .DS_Store
-Gemfile.lock
-/public/country
-/public/date
-/public/index.html
-/public/newspaper
-/public/snapshots
-/webpages
-/tmp
+public/country
+public/date
+public/index.html
+public/newspaper
+public/snapshots
+public/json
+webpages
+tmp

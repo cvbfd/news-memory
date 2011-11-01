@@ -1,0 +1,76 @@
+GIT
+  remote: git://github.com/archiloque/sinatra-cache.git
+  revision: d2057250205d7a52df57bc88912cc907b6861e7b
+  specs:
+    sinatra-cache (0.3.7)
+      sinatra (>= 1.1.0)
+      sinatra-outputbuffer (>= 0.1.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.2.6)
+    andand (1.3.1)
+    css_parser (1.2.5)
+      addressable
+    diff-lcs (1.1.3)
+    em-http-request (1.0.0)
+      addressable (>= 2.2.3)
+      em-socksify
+      eventmachine (>= 1.0.0.beta.3)
+      http_parser.rb (>= 0.5.2)
+    em-socksify (0.1.0)
+      eventmachine
+    eventmachine (1.0.0.beta.4)
+    grit (2.4.1)
+      diff-lcs (~> 1.1)
+      mime-types (~> 1.15)
+    http_parser.rb (0.5.3)
+    jsmin (1.0.1)
+    mime-types (1.17.2)
+    nokogiri (1.5.0)
+    pg (0.11.0)
+    rack (1.3.5)
+    rack-flash (0.1.2)
+      rack
+    rack-openid (1.3.1)
+      rack (>= 1.1.0)
+      ruby-openid (>= 2.1.8)
+    rack-test (0.6.1)
+      rack (>= 1.0)
+    ruby-openid (2.1.8)
+    sequel (3.28.0)
+    sinatra (1.2.6)
+      rack (~> 1.1)
+      tilt (>= 1.2.2, < 2.0)
+    sinatra-assetpack (0.0.10)
+      jsmin
+      rack-test
+      sinatra
+      tilt (>= 1.3.0)
+    sinatra-outputbuffer (0.1.0)
+      sinatra (>= 1.0.a)
+    tilt (1.3.3)
+    webpage-archivist (0.0.3)
+      addressable (~> 2.2.6)
+      andand (~> 1.3.1)
+      css_parser (~> 1.2.3)
+      em-http-request (~> 1.0.0)
+      eventmachine (~> 1.0.0.beta.4)
+      grit (~> 2.4.1)
+      mime-types (~> 1.17.2)
+      nokogiri (~> 1.5)
+      sequel (~> 3.28)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  addressable (~> 2.2.6)
+  pg
+  rack-flash (~> 0.1.1)
+  rack-openid (~> 1.3.1)
+  sinatra (= 1.2.6)
+  sinatra-assetpack (~> 0.0.10)
+  sinatra-cache!
+  webpage-archivist (= 0.0.3)
