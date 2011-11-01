@@ -53,6 +53,7 @@ module NewsMemory
 
     register Sinatra::Cache
     set :cache_enabled, true
+    set :cache_environment, :development
 
     before do
       @user_logged = session[:user]
