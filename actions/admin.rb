@@ -12,6 +12,7 @@ module NewsMemory
         @js = :admin
         @css = :admin
         @newspapers = Newspaper.order(:name.asc)
+        headers 'Cache-Control' => 'no-cache, must-revalidate'
         erb :'admin.html', :cache => false
       end
     end

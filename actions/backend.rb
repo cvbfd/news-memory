@@ -23,6 +23,7 @@ module NewsMemory
     get '/backend/snapshots' do
       protected!
       snapshots
+      headers 'Cache-Control' => 'no-cache, must-revalidate'
       'OK'
     end
 
