@@ -51,6 +51,8 @@ module NewsMemory
       set :show_exceptions, :true
     end
 
+    set :dump_errors, true
+
     register Sinatra::Cache
     set :cache_enabled, true
     set :cache_environment, :development
